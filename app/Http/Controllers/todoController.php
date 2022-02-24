@@ -14,6 +14,7 @@ class todoController extends Controller
     public function index()
     {
         //
+        return view('todos');
     }
 
     /**
@@ -35,6 +36,7 @@ class todoController extends Controller
     public function store(Request $request)
     {
         //
+        
     }
 
     /**
