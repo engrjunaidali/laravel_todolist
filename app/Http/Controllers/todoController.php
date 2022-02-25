@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\Todo;
 class todoController extends Controller
 {
     /**
@@ -12,9 +12,18 @@ class todoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
-        return view('todos');
+    {   
+        $total_todos = Todo::count();
+        $complete_todos = Todo::where('completed','LIKE',True)->get()->count();
+
+        $incomplete_todos = Todo::where('completed','LIKE',False)->get()->count();
+
+        // $todos = Todo::where('completed','LIKE',False)->orderBy('tid', 'desc')->get();
+        $todos = Todo::all();
+        return view('todos',['todos'=>$todos,
+                            'total_todos'=>$total_todos,
+                            'complete_todos'=>$complete_todos,
+                            'incomplete_todos'=>$incomplete_todos]);
     }
 
     /**
@@ -35,8 +44,10 @@ class todoController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        
+        $t = new Todo;
+        $t->item = $request->todo_item;
+        $t->save();
+        return redirect()->back();
     }
 
     /**
@@ -73,6 +84,14 @@ class todoController extends Controller
         //
     }
 
+    public function complete(Request $request, $id)
+    {
+        $t=Todo::find($id);
+        $t->completed = True;
+        $t->save();
+        return redirect('todos');
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -82,5 +101,8 @@ class todoController extends Controller
     public function destroy($id)
     {
         //
+        $t = Todo::find($id);
+        $t->delete();
+        return redirect('todos');
     }
 }

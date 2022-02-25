@@ -20,7 +20,8 @@ Route::get('/', function () {
 Route::get('/todos',[todoController::class,'index'])->name('index');
 
 Route::prefix('/todo')->group(function(){
-    Route::get('/store',[todoController::class,'store']);
+    Route::post('/store',[todoController::class,'store']);
     Route::get('/{id}',[todoController::class,'update']);
-    Route::get('/{id}',[todoController::class,'destroy']);
+    Route::get('/delete/{id}',[todoController::class,'destroy']);
+    Route::get('/complete/{id}',[todoController::class,'complete']);
 });
